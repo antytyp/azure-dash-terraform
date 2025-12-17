@@ -7,6 +7,6 @@ variable "location" {
 }
 
 variable "web_app_name" {
-  default     = "dashwebapp"
+  default     = "pdyrlagadashwebapp"
   description = "Globally unique app name"
 }
