@@ -3,7 +3,7 @@ variable "resource_group_name" {
 }
 
 variable "location" {
-  default = "northeurope"
+  default = "westeurope"
 }
 
 variable "web_app_name" {
