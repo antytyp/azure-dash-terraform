@@ -32,7 +32,7 @@ resource "azurerm_linux_web_app" "dash" {
 }
 
 resource "azurerm_storage_account" "sa" {
-  name                     = "functionappstorage${random_string.suffix.result}"
+  name                     = "function-app-storage-${random_string.suffix.result}"
   resource_group_name      = azurerm_resource_group.rg.name
   location                 = azurerm_resource_group.rg.location
   account_tier             = "Standard"
