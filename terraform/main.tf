@@ -32,7 +32,7 @@ resource "azurerm_linux_web_app" "dash" {
 }
 
 resource "azurerm_storage_account" "sa" {
-  name                     = "function-app-storage-${random_string.suffix.result}"
+  name                     = "funcappsa${random_string.suffix.result}"
   resource_group_name      = azurerm_resource_group.rg.name
   location                 = azurerm_resource_group.rg.location
   account_tier             = "Standard"
@@ -41,11 +41,10 @@ resource "azurerm_storage_account" "sa" {
 
 resource "azurerm_service_plan" "functionappplan" {
   name                = "asp-function-app"
-  resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
-
+  resource_group_name = azurerm_resource_group.rg.name
   os_type  = "Linux"
-  sku_name = "Y1"
+  sku_name = "B1"
 }
 
 resource "azurerm_linux_function_app" "func" {
