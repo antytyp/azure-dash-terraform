@@ -30,3 +30,52 @@ resource "azurerm_linux_web_app" "dash" {
     WEBSITES_PORT                  = "8000"
   }
 }
+
+resource "azurerm_storage_account" "sa" {
+  name                     = "function-app-storage-${random_string.suffix.result}"
+  resource_group_name      = azurerm_resource_group.rg.name
+  location                 = azurerm_resource_group.rg.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+}
+
+resource "azurerm_service_plan" "functionappplan" {
+  name                = "asp-function-app"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+
+  os_type  = "Linux"
+  sku_name = "Y1"
+}
+
+resource "azurerm_linux_function_app" "func" {
+  name                = "function-app-demo-${random_string.suffix.result}"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+
+  service_plan_id = azurerm_service_plan.functionappplan.id
+
+  storage_account_name       = azurerm_storage_account.sa.name
+  storage_account_access_key = azurerm_storage_account.sa.primary_access_key # TODO - investigate if it's safe
+
+  site_config {
+    application_stack {
+      python_version = "3.10" # TODO - python stack defined for a second time, refactor
+    }
+  }
+
+  app_settings = {
+    FUNCTIONS_WORKER_RUNTIME = "python"
+    WEBSITE_RUN_FROM_PACKAGE = "1"
+  }
+
+  identity {
+    type = "SystemAssigned"
+  }
+}
+
+resource "random_string" "suffix" {
+  length  = 6
+  special = false
+  upper   = false
+}
